@@ -272,7 +272,7 @@ class PGSchemaToJsonVisitor(pgsVisitor):
         if getattr(self, "ignore_label_spec", False):
             return self.visitChildren(ctx)
         
-        if self.current_node_name is not None or self.current_rel is not None:
+        if self.current_node_name is not None or getattr(self, "current_rel", None) is not None:
             has_optional = False
             for i in range(ctx.getChildCount()):
                 child = ctx.getChild(i)
@@ -296,7 +296,7 @@ class PGSchemaToJsonVisitor(pgsVisitor):
                 else:
                     if self.current_node_name is not None and self.elem_table[self.current_node_name]["caption"] == "":
                         self.elem_table[self.current_node_name]["caption"] = clean_text
-                    elif self.current_rel is not None and self.current_rel["type"] == "":
+                    elif getattr(self, "current_rel", None) is not None and self.current_rel["type"] == "":
                         self.current_rel["type"] = clean_text.capitalize()
 
             result = self.visitChildren(ctx)
