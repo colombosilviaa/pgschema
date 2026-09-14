@@ -419,7 +419,7 @@ class PGSchemaToJsonVisitor(pgsVisitor):
             for t_id in to_nodes:
                 if not s_id or not t_id: continue
                     
-                pair_signature = frozenset([s_id, t_id])
+                pair_signature = (s_id, t_id)
                 if pair_signature in processed_pairs: continue  
                 processed_pairs.add(pair_signature)
 
