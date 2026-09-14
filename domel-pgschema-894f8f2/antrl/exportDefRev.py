@@ -21,7 +21,8 @@ def convert_internal_representation_to_pgschema_dict(graph: Dict[str, Any]) -> D
         "name": safe_name,
         "mode": graph.get("graphTypeMode", "strict").upper(),
         "imports": graph.get("imports", []),
-        "nodes": [], 
+        "nodes": [],
+        "abstract_nodes": [],
         "relationships": [],
         "constraints": []
     }
@@ -119,7 +120,12 @@ def convert_internal_representation_to_pgschema_dict(graph: Dict[str, Any]) -> D
         formatted_node = _format_single_node(node, caption_str, type_name)
 
         if formatted_node:
-            pg_schema_dict["nodes"].append(formatted_node)
+            if node.get("abstract"):
+                # I tipi ABSTRACT vanno dichiarati come istruzione a parte, non dentro
+                # il blocco CREATE GRAPH TYPE (la grammatica PG-Schema non lo permette).
+                pg_schema_dict["abstract_nodes"].append(f"CREATE NODE TYPE ABSTRACT {formatted_node}")
+            else:
+                pg_schema_dict["nodes"].append(formatted_node)
 
     # RELATIONSHIPS
     formatted_associations = _format_associations(relationships, nodes, id_to_typename)
@@ -494,6 +500,7 @@ def dump_pgschema(pgs_schema: Dict[str, Any]) -> str:
     imports = pgs_schema.get("imports", [])
 
     nodes = pgs_schema.get("nodes", [])
+    abstract_nodes = pgs_schema.get("abstract_nodes", [])
     relationships = pgs_schema.get("relationships", [])
     constraints = pgs_schema.get("constraints", [])
 
@@ -502,8 +509,12 @@ def dump_pgschema(pgs_schema: Dict[str, Any]) -> str:
         imports_str = f" IMPORTS {imports[0]}"
 
     all_items = nodes + relationships + constraints
-    
+
     output = []
+
+    for statement in abstract_nodes:
+        output.append(statement)
+
     output.append(f"CREATE GRAPH TYPE {name} {mode}{imports_str} {{")
     
     if all_items:
