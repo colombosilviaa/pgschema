@@ -186,12 +186,11 @@ class PGSchemaToJsonVisitor(pgsVisitor):
 
     def _get_or_create_elem(self, name):
         final_caption, clean_name, _ = self._parse_label(name)
-        
-        for key, data in self.elem_table.items():
-            _, key_clean, _ = self._parse_label(key)
-            
-            if key_clean == clean_name:
-                return data["id"]
+
+        if clean_name in self.elem_table:
+            return self.elem_table[clean_name]["id"]
+
+        for data in self.elem_table.values():
             if data["caption"].lower() == clean_name:
                 return data["id"]
         
