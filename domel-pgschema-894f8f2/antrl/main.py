@@ -136,21 +136,21 @@ def parse_constraints_to_json(constraints_block):
         #estraggo qualificatori
         qualifiers = []
         for q in ["EXCLUSIVE", "MANDATORY", "SINGLETON"]:
-            if q in rule_str:
+            if re.search(rf'\b{q}\b', rule_str):
                 qualifiers.append(q)
-                rule_str = rule_str.replace(q, "").strip()
-        
+                rule_str = re.sub(rf'\b{q}\b', '', rule_str).strip()
+
         #estraggo clausole
         target = ""
         within_clause = None
         where_clause = None
-        
-        if "WHERE" in rule_str:
-            rule_str, where_str = rule_str.split("WHERE", 1)
+
+        if re.search(r'\bWHERE\b', rule_str):
+            rule_str, where_str = re.split(r'\bWHERE\b', rule_str, maxsplit=1)
             where_clause = where_str.strip()
-            
-        if "WITHIN" in rule_str:
-            rule_str, within_str = rule_str.split("WITHIN", 1)
+
+        if re.search(r'\bWITHIN\b', rule_str):
+            rule_str, within_str = re.split(r'\bWITHIN\b', rule_str, maxsplit=1)
             within_clause = within_str.strip()
             
         target = rule_str.strip()
