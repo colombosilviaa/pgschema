@@ -307,11 +307,13 @@ def _resolve_inheritance(node_id, node_parents, id_to_typename, id_to_node):
     if not and_targets and len(xor_targets) < 2:
         return id_to_node.get(node_id, {}).get("caption", "Unknown")
 
-    # Innesca il motore ricorsivo
-    return _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node)
+    # Innesca il motore ricorsivo, riusando la divisione AND/XOR già calcolata sopra
+    return _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node,
+                                   and_targets=and_targets, xor_targets=xor_targets)
 
 
-def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, parent_op=None):
+def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, parent_op=None,
+                            and_targets=None, xor_targets=None):
     """
     Helper ricorsivo: naviga l'albero delle dipendenze logiche, risolve i nomi
     e applica le parentesi per rispettare la precedenza degli operatori (es. AND dentro OR).
@@ -347,8 +349,9 @@ def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, pa
 
         return sub_expr
 
-    and_targets = [t for t in targets if not t["exclusive"]]
-    xor_targets = [t for t in targets if t["exclusive"]]
+    if and_targets is None or xor_targets is None:
+        and_targets = [t for t in targets if not t["exclusive"]]
+        xor_targets = [t for t in targets if t["exclusive"]]
 
     if and_targets and len(xor_targets) >= 2:
         # CASO MISTO: genitori obbligatori (AND) + un gruppo di alternative esclusive (XOR)
