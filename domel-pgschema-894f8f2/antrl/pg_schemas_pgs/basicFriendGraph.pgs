@@ -1,5 +1,0 @@
-CREATE GRAPH TYPE basicFriendGraph STRICT {
-  (personType: Person {name STRING, OPTIONAL bday DATE}),
-
-  (:personType)-[friendType: Knows {OPTIONAL since DATE}]-> (:personType)
-}

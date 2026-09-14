@@ -1,5 +1,0 @@
-CREATE GRAPH TYPE B2BNetworkGraph STRICT {
-    (supplierType: Supplier {rating FLOAT, paymentTerms STRING}),
-    (customerType: Customer {discountTier STRING, loyaltyPoints INT}),
-    (partnerType: supplierType | customerType | (supplierType & customerType))
-}

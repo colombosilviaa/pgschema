@@ -1,5 +1,0 @@
-CREATE GRAPH TYPE xorBaseCase STRICT {
-    (personType: Person {name STRING, OPTIONAL bday DATE, email STRING}),
-    (athleteType: Athlete {sport STRING, isOlympic BOOLEAN, medals INT}),
-    (customerType: personType | athleteType {loyaltyPoints INT, OPTIONAL tier STRING})
-}

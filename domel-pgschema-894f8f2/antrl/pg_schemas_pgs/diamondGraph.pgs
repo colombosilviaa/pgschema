@@ -1,5 +1,0 @@
-CREATE GRAPH TYPE diamondGraph STRICT {
-  (xType: A & B {propertyA INT, propertyB INT}),
-  (yType: B & C {propertyB INT, propertyC INT}),
-  (zType: xType & yType)
-}

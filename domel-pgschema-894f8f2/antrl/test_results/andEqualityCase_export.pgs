@@ -1,4 +1,0 @@
-CREATE GRAPH TYPE andEqualityCase STRICT {
-    (personType: Person {name STRING, OPTIONAL bday DATE, email STRING}),
-    (customerType: personType & Customer {name STRING, OPTIONAL since DATE, loyaltyPoints INT})
-}

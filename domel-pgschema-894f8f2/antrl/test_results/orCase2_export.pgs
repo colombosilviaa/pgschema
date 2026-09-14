@@ -1,3 +1,0 @@
-CREATE GRAPH TYPE orCase2 STRICT {
-    (NameType: A | B | (A & B))
-}

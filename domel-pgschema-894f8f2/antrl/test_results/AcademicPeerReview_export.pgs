@@ -1,8 +1,0 @@
-CREATE GRAPH TYPE AcademicPeerReview STRICT {
-    (researcherType: Researcher {orcid STRING, affiliation STRING}),
-    (paperType: Paper {doi STRING, status STRING}),
-    (:researcherType)-[reviewactionType: Assigned & Reviewed & Approved? {score FLOAT, OPTIONAL comment STRING}]->(:paperType),
-    FOR (x: researcherType) EXCLUSIVE MANDATORY SINGLETON x.orcid,
-    FOR (x: reviewActionType) MANDATORY x.score >= 0.0,
-    FOR (x: reviewActionType) MANDATORY x.score <= 10.0
-}

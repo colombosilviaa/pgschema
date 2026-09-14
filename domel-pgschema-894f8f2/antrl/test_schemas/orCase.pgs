@@ -1,3 +1,0 @@
-CREATE GRAPH TYPE orCase STRICT {
-  (AType: A \/ B)
-}

@@ -1,3 +1,0 @@
-CREATE GRAPH TYPE orCaseReal STRICT {
-  (personType: Student \/ Worker {name STRING, age INT})
-}

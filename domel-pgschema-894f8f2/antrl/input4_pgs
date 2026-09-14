@@ -1,8 +1,0 @@
-CREATE GRAPH TYPE HTBComputation STRICT {
-  (experimentType: Experiment {run_id INT, start_time DATE, horizon FLOAT, OPEN}),
-  (:experimentType)-[designedForType: DesignedFor]->(:objectiveType),
-  (:experimentType)-[responsibleType: Responsible {rol STRING}]->(:personType),
-
-  FOR (e:experimentType) MANDATORY EXCLUSIVE SINGLETON e.run_id,
-  FOR (e:experimentType) MANDATORY r WITHIN (e)-[r:responsibleType]->(:personType)
-}

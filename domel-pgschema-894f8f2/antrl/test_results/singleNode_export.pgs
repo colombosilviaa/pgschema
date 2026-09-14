@@ -1,5 +1,0 @@
-CREATE GRAPH TYPE singleNode STRICT {
-    (personType: Person {name STRING, OPTIONAL bday DATE}),
-    (athleteType: Athlete OPEN {sport STRING, isOlympic BOOLEAN, medals INT}),
-    (customerType: Customer {loyaltyPoints INT, OPTIONAL tier STRING, OPEN})
-}
