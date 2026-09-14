@@ -605,19 +605,29 @@ class PGSchemaToJsonVisitor(pgsVisitor):
                 parent_node = self._get_node_by_id(parent_node_id)
                 
                 edges_to_remove = []
+                already_reified = False
                 for rel in self.json_schema["relationships"]:
                     if rel.get("type", "").upper() == node_name.upper() and rel.get("relationshipType") == "ASSOCIATION":
+                        if already_reified:
+                            # Un nodo reificato ha un solo source/target: una seconda relazione con lo
+                            # stesso nome di tipo non puo' essere assorbita senza sovrascrivere la prima.
+                            # La lasciamo com'e' (relazione ASSOCIATION separata) invece di eliminarla,
+                            # per non perdere silenziosamente i suoi dati.
+                            print(f"WARN: Multiple '{node_name}' relationships found while reifying '{parent_raw_clean}'; keeping the extra one as a separate ASSOCIATION.")
+                            continue
+
                         if parent_node:
                             src_node = self._get_node_by_id(rel.get("fromId"))
                             tgt_node = self._get_node_by_id(rel.get("toId"))
-                            
+
                             src_cap = src_node["caption"] if src_node else "Unknown"
                             tgt_cap = tgt_node["caption"] if tgt_node else "Unknown"
-                            
+
                             self._build_reified_node(parent_node, src_cap, tgt_cap, rel.get("properties", {}))
                             if "constraints" in rel: parent_node["constraints"] = list(rel["constraints"])
                         edges_to_remove.append(rel)
-                
+                        already_reified = True
+
                 for edge in edges_to_remove: self.json_schema["relationships"].remove(edge)
 
                 self.json_schema["relationships"].append({
