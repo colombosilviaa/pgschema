@@ -212,7 +212,6 @@ def apply_property_constraints(json_schema, parsed_constraints, alias_table):
         # =========================================================
         # CASO 1: Confronto matematico (es. x.salary >= 0)
         # =========================================================
-        comp_match = re.search(r'^(\w+)\.(\w+)\s*(>=|<=|>|<|=|!=)\s*(.+)$', target_string)
         if not within_clause and any(op in target_string for op in ['>=', '<=', '>', '<', '=', '!=']):
 
             conditions = re.split(r'\s+AND\s+', target_string, flags=re.IGNORECASE)
