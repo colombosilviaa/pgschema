@@ -368,50 +368,6 @@ def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, pa
 
     return expr
 
-def _extract_constraints(nodes: List[Dict[str, Any]]) -> List[str]:
-    generated_constraints = []
-    seen_disjoints = set() # Set per evitare di stampare i disjoint doppi (reciproci)
-
-    for node in nodes:
-        node_var = node.get("original_type_name", f"{node.get('caption', 'unknown').lower()}Type")
-        alias = "x"  #---> capire come gestirlo
-
-        # 1. CONTROLLO SULLE PROPERTIES (Identifier e Unique/Exclusive)
-        for prop_name, prop_data in node.get("properties", {}).items():
-            if prop_data.get("requiredType") == "identifier":
-                generated_constraints.append(f"FOR ({alias}: {node_var}) EXCLUSIVE MANDATORY SINGLETON {alias}.{prop_name}")
-            elif prop_data.get("unique") is True:
-                generated_constraints.append(f"FOR ({alias}: {node_var}) EXCLUSIVE {alias}.{prop_name}")
-
-        # 2. CONTROLLO SULL'ARRAY "CONSTRAINTS"
-        for constraint in node.get("constraints", []):
-            c_type = constraint.get("type")
-
-            # A. Value Constraints (Matematici)
-            if c_type == "property_value":
-                prop = constraint.get("on")
-                op = constraint.get("operator")
-                val = constraint.get("value")
-                
-                # Se il valore è una stringa, aggiungiamo gli apici per la sintassi
-                formatted_val = f"'{val}'" if isinstance(val, str) else val
-                generated_constraints.append(f"FOR ({alias}: {node_var}) MANDATORY {alias}.{prop} {op} {formatted_val}")
-
-            # B. Disjoint (Mutuamente esclusivi)
-            elif c_type == "disjoint":
-                target_caption = constraint.get("node")
-                
-                # Cerchiamo il nome originale del nodo target partendo dalla sua caption
-                target_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == target_caption.lower()), f"{target_caption.lower()}Type")
-
-                # Siccome i disjoint sono reciproci nel JSON (A->B e B->A), usiamo un set per stamparlo una volta sola
-                pair = tuple(sorted([node_var, target_var]))
-                if pair not in seen_disjoints:
-                    seen_disjoints.add(pair)
-                    generated_constraints.append(f"FOR ({alias}: {node_var}) MANDATORY ({alias}: !{target_var})")
-
-    return generated_constraints
-
 def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Dict[str, Any]] = None) -> List[str]:
     if relationships is None:
         relationships = []
