@@ -125,7 +125,7 @@ def parse_constraints_to_json(constraints_block):
     constraints_list = []
 
     #separo i diversi blocchi FOR
-    pattern = r'FOR\s*\(([^)]+)\)\s*(.*?)(?=\s*(?:,\s*)?FOR|$)'
+    pattern = r'\bFOR\s*\(([^)]+)\)\s*(.*?)(?=\s*(?:,\s*)?\bFOR|$)'
     matches = re.finditer(pattern, constraints_block, re.IGNORECASE | re.DOTALL)
 
     for m in matches:
