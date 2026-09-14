@@ -1,0 +1,5 @@
+CREATE GRAPH TYPE LooseSocialGraph LOOSE {
+    (personType: Person {username STRING, age INT}),
+    (cityType: City {cityName STRING, zipCode STRING}),
+    (:personType)-[livesinType: Livesin {since DATE}]->(:cityType)
+}

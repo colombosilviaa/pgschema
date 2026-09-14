@@ -1,0 +1,14 @@
+CREATE GRAPH TYPE TVHotelGraph STRICT {
+  (visualType: Visual {resolution STRING, isOled BOOLEAN, OPTIONAL manufactureDate DATE}),
+  (electronicType: Electronic {voltage FLOAT}),
+  (audioType: Audio {decibels INT, isWireless BOOLEAN, OPEN}),
+  (monitorType: Visual & Electronic),
+  (speakerType: Electronic & Audio),
+  (tvType: monitorType & speakerType),
+
+  (roomType: Room {roomNumber INT, floor INT}),
+  (:roomType)-[hasTvType: HasTV]->(:tvType),
+  FOR (e: electronicType) MANDATORY e.voltage >= 110.0 AND e.voltage <= 220.0,
+  FOR (a: audioType) MANDATORY a.decibels <= 120,
+  FOR (r: roomType) SINGLETON rel WITHIN (r)-[rel: hasTvType]->()
+}

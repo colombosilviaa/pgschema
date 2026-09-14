@@ -1,0 +1,215 @@
+{
+    "name": "FleetManagement",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 1168,
+                "y": 159
+            },
+            "caption": "Vehicle",
+            "original_type_name": "vehicleType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "vin": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "string"
+                },
+                "plate": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string",
+                    "unique": true
+                },
+                "mileage": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "constraints": [
+                {
+                    "on": "mileage",
+                    "type": "property_value",
+                    "operator": ">=",
+                    "value": 0
+                },
+                {
+                    "on": "vin",
+                    "type": "equal",
+                    "target": "Driver.assignedVin"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 480,
+                "y": 160
+            },
+            "caption": "Driver",
+            "original_type_name": "driverType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "licenseId": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "string"
+                },
+                "name": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "assignedVin": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "constraints": [
+                {
+                    "on": "assignedVin",
+                    "type": "equal",
+                    "target": "Vehicle.vin"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 313,
+                "y": 447
+            },
+            "caption": "Maintenance",
+            "original_type_name": "maintenanceType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "ticketId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                },
+                "cost": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "type": "Drives",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n1",
+            "toId": "n0",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": 1,
+            "navigation": "None",
+            "original_type_name": "drivesType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "type": "Requires",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n0",
+            "toId": "n2",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "requiresType"
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

@@ -1,0 +1,10 @@
+CREATE GRAPH TYPE DigitalMarketplace STRICT {
+    (vendorType: Vendor {taxId STRING}),
+    (buyerType: Buyer {email STRING}),
+    (userType: vendorType | buyerType | (vendorType & buyerType) {rating FLOAT}),
+    (itemType: Item {sku STRING, price FLOAT}),
+    (:userType)-[Interacts: Cart|Purchases|Views {qty INT}]->(:itemType),
+    FOR (x: userType) MANDATORY x.rating >= 1.0,
+    FOR (x: userType) MANDATORY x.rating <= 5.0,
+    FOR (x: itemType) MANDATORY x.price >= 0.0
+}

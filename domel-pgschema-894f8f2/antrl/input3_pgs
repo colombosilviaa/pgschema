@@ -1,0 +1,11 @@
+CREATE GRAPH TYPE DisjointTest STRICT {
+  (personType: Person OPEN {name STRING, OPEN}),
+  (customerType: Person & Customer {name string, OPTIONAL since DATE}),
+  (salariedType: Salaried {salary INT, OPEN}),
+  (unemployedType: Unemployed OPEN {date DATE}),
+  (employeeType: personType & salariedType),
+  (:personType)-[friendType: Knows {OPTIONAL since DATE}]-> (:personType),
+  (:employeeType)-[buddyType: friendType {since DATE, causal BOOL}]->(:employeeType),
+  FOR (x: salariedType) MANDATORY x.salary >= 1000
+  FOR (x: customerType) MANDATORY (x: !employeeType)
+}

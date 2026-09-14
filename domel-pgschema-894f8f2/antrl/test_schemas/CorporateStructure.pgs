@@ -1,0 +1,14 @@
+CREATE GRAPH TYPE CorporateStructure STRICT {
+  (personType: Person {name STRING, taxId STRING}),
+  (companyType: Company {name STRING, vatNumber STRING}),
+  (employeeType: personType & Employee {salary INT, department STRING}),
+  (managerType: employeeType & Manager {budget INT, hasStockOptions BOOLEAN}),
+  (executiveType: managerType & Executive {boardMember BOOLEAN}),
+  (:employeeType)-[worksForType: WorksFor {startDate DATE}]->(:companyType),
+  (:employeeType)-[reportsToType: ReportsTo]->(:managerType),
+  (:executiveType)-[ownsSharesType: OwnsShares {percentage FLOAT}]->(:companyType),
+  
+  FOR (x: employeeType) MANDATORY x.salary >= 30000,
+  FOR (x: managerType) MANDATORY x.budget >= 100000,
+  FOR (x: ownsSharesType) MANDATORY x.percentage > 0.0
+}

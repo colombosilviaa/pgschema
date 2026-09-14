@@ -1,0 +1,14 @@
+CREATE GRAPH TYPE FleetManagement STRICT {
+  (vehicleType: Vehicle {vin STRING, plate STRING, mileage INT}),
+  (driverType: Driver {licenseId STRING, name STRING, assignedVin STRING}),
+  (maintenanceType: Maintenance {ticketId INT, cost FLOAT}),
+  (:driverType)-[drivesType: Drives]->(:vehicleType),
+  (:vehicleType)-[requiresType: Requires]->(:maintenanceType),
+
+  FOR (v: vehicleType) EXCLUSIVE MANDATORY SINGLETON v.vin,
+  FOR (v: vehicleType) EXCLUSIVE v.plate,
+  FOR (d: driverType) EXCLUSIVE MANDATORY SINGLETON d.licenseId,
+  FOR (v: vehicleType) MANDATORY v.mileage >= 0,
+  FOR (d: driverType) MANDATORY v.vin WITHIN (v: vehicleType) WHERE v.vin = d.assignedVin,
+  FOR (d: driverType) SINGLETON r WITHIN (d)-[r: drivesType]->()
+}

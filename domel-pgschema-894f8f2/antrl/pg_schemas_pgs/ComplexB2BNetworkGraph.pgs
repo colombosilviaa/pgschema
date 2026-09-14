@@ -1,0 +1,6 @@
+CREATE GRAPH TYPE ComplexB2BNetworkGraph STRICT {
+  (companyType: Company {vatNumber STRING, name STRING}),
+  (supplierType: Supplier {rating FLOAT, paymentTerms STRING}),
+  (customerType: Customer {discountTier STRING, loyaltyPoints INT}),
+  (partnerType: companyType & (supplierType \/ customerType))
+}

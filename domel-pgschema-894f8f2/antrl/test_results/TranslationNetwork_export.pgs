@@ -1,0 +1,9 @@
+CREATE GRAPH TYPE TranslationNetwork STRICT {
+    (translatorType: Translator {certId STRING, level INT}),
+    (documentType: Document {docId INT, wordCount INT}),
+    (languageType: Language {isoCode STRING}),
+    (:translatorType)-[translatesType: Translates {pricePerWord FLOAT}]->(:documentType),
+    (:documentType)-[Writtenin: Source_language|Target_language]->(:languageType),
+    FOR (x: translatorType) EXCLUSIVE MANDATORY SINGLETON x.certId,
+    FOR (x: documentType) MANDATORY x.wordCount > 0
+}

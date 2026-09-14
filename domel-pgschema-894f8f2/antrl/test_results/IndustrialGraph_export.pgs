@@ -1,0 +1,12 @@
+CREATE GRAPH TYPE IndustrialGraph STRICT {
+    (machineType: Machine {macAddress STRING, model STRING}),
+    (sensorType: Sensor {sensorId STRING, isActive BOOLEAN}),
+    (thermalType: sensorType & Thermal {temperature FLOAT}),
+    (pressureType: sensorType & Pressure {psi FLOAT}),
+    (:machineType)-[monitoredbyType: Monitoredby {installDate DATE}]->(:sensorType),
+    FOR (x: machineType) EXCLUSIVE MANDATORY SINGLETON x.macAddress,
+    FOR (x: sensorType) EXCLUSIVE MANDATORY SINGLETON x.sensorId,
+    FOR (x: thermalType) MANDATORY x.temperature < '-20.0 OR t.temperature > 150.0',
+    FOR (x: pressureType) MANDATORY x.psi < '10.0 OR p.psi > 500.0',
+    FOR (x: machineType) MANDATORY y WITHIN (x)-[y: monitoredByType]->()
+}

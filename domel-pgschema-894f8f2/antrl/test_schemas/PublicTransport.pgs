@@ -1,0 +1,14 @@
+CREATE GRAPH TYPE PublicTransport STRICT {
+  (stationType: Station {stationId INT, name STRING}),
+  (hubType: stationType & Hub {terminals INT}),
+  (routeType: Route {routeId INT, color STRING}),
+  (vehicleType: Vehicle {vehicleId INT, capacity INT}),
+  (busType: vehicleType & Bus {wheelchairAccess BOOLEAN}),
+  (trainType: vehicleType & Train {wagons INT}),
+  (:routeType)-[stopsAtType: StopsAt {order INT}]->(:stationType),
+  (:vehicleType)-[assignedToType: AssignedTo]->(:routeType),
+
+  FOR (v: vehicleType) EXCLUSIVE MANDATORY SINGLETON v.vehicleId,
+  FOR (s: stationType) EXCLUSIVE MANDATORY SINGLETON s.stationId,
+  FOR (b: busType) MANDATORY (b: !trainType)
+}

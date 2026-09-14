@@ -1,0 +1,7 @@
+CREATE GRAPH TYPE DeepReificationTest STRICT {
+    (personType: Person {name STRING}),
+    (docType: Document {title STRING}),
+    (:personType)-[readsType: Reads {time INT}]->(:docType),
+    (:personType)-[studiesType: readsType {subject STRING}]->(:docType),
+    (:personType)-[memorizesType: studiesType {grade INT}]->(:docType)
+}

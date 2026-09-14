@@ -1,0 +1,4 @@
+CREATE GRAPH TYPE optEqualityCase STRICT {
+    (personType: Person {name STRING, OPTIONAL bday DATE, email STRING}),
+    (customerType: personType & Customer ? {name STRING, OPTIONAL since DATE, loyaltyPoints INT})
+}

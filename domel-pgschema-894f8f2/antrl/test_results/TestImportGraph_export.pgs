@@ -1,0 +1,5 @@
+CREATE GRAPH TYPE TestImportGraph STRICT IMPORTS BaseGraph {
+    (userType: User {id INT}),
+    (roleType: Role {name STRING}),
+    (:userType)-[hasroleType: Hasrole]->(:roleType)
+}

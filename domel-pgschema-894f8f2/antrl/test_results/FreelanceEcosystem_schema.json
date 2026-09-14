@@ -1,0 +1,413 @@
+{
+    "name": "FreelanceEcosystem",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 981,
+                "y": 549
+            },
+            "caption": "User",
+            "original_type_name": "userType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "userId": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "integer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": true,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 498,
+                "y": 501
+            },
+            "caption": "Client",
+            "original_type_name": "Client",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 772,
+                "y": 356
+            },
+            "caption": "User AND Client",
+            "original_type_name": "clientType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "company": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate",
+            "constraints": [
+                {
+                    "type": "disjoint",
+                    "node": "User AND Freelancer"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 327,
+                "y": 581
+            },
+            "caption": "Freelancer",
+            "original_type_name": "Freelancer",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 734,
+                "y": 372
+            },
+            "caption": "User AND Freelancer",
+            "original_type_name": "freelancerType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "hourlyRate": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate",
+            "constraints": [
+                {
+                    "type": "disjoint",
+                    "node": "User AND Client"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n5",
+            "position": {
+                "x": 663,
+                "y": 480
+            },
+            "caption": "Project",
+            "original_type_name": "projectType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "projId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                },
+                "budget": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                },
+                "deadline": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "date"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": true
+            },
+            "constraints": [
+                {
+                    "on": "budget",
+                    "type": "property_value",
+                    "operator": ">=",
+                    "value": 100.0
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n6",
+            "position": {
+                "x": 1083,
+                "y": 418
+            },
+            "caption": "Engagement",
+            "original_type_name": "Engagement",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "User AND Freelancer"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Project"
+                },
+                "hours": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                },
+                "rating": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "float"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        },
+        {
+            "entityType": "node",
+            "id": "n7",
+            "position": {
+                "x": 1030,
+                "y": 304
+            },
+            "caption": "Bids",
+            "original_type_name": "Bids",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        },
+        {
+            "entityType": "node",
+            "id": "n8",
+            "position": {
+                "x": 1052,
+                "y": 411
+            },
+            "caption": "Workson",
+            "original_type_name": "Workson",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        },
+        {
+            "entityType": "node",
+            "id": "n9",
+            "position": {
+                "x": 1163,
+                "y": 464
+            },
+            "caption": "Completes",
+            "original_type_name": "Completes",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n2",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n2",
+            "toId": "n1",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n2",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n4",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n3",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n4",
+            "toId": "n3",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n4",
+            "type": "Posts",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n2",
+            "toId": "n5",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "postsType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n6",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "style": {},
+            "properties": {},
+            "fromId": "n7",
+            "toId": "n6",
+            "description": "",
+            "required": true
+        },
+        {
+            "entityType": "relationship",
+            "id": "n7",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "style": {},
+            "properties": {},
+            "fromId": "n8",
+            "toId": "n6",
+            "description": "",
+            "required": true
+        },
+        {
+            "entityType": "relationship",
+            "id": "n8",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "style": {},
+            "properties": {},
+            "fromId": "n9",
+            "toId": "n6",
+            "description": "",
+            "required": true
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

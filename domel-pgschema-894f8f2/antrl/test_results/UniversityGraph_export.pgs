@@ -1,0 +1,9 @@
+CREATE GRAPH TYPE UniversityGraph STRICT {
+    (studentType: Student {studentID INT, advisorID INT}),
+    (professorType: Professor {id INT, name STRING}),
+    (:studentType)-[thesisrelType: Supervisedby & Evaluatedby?]->(:professorType),
+    FOR (x: studentType) EXCLUSIVE MANDATORY SINGLETON x.studentID,
+    FOR (x: studentType) MANDATORY y.id WITHIN (y: professorType) WHERE y.id = x.advisorId,
+    FOR (x: professorType) EXCLUSIVE MANDATORY SINGLETON x.id,
+    FOR (x: studentType) SINGLETON y WITHIN (x)-[y: thesisRel]->()
+}

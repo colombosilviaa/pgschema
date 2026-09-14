@@ -1,0 +1,335 @@
+{
+    "name": "AcademicPeerReview",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 631,
+                "y": 302
+            },
+            "caption": "Researcher",
+            "original_type_name": "researcherType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "orcid": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "string"
+                },
+                "affiliation": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 615,
+                "y": 378
+            },
+            "caption": "Paper",
+            "original_type_name": "paperType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "doi": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "status": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 1127,
+                "y": 594
+            },
+            "caption": "Assigned",
+            "original_type_name": "Assigned_n0_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Researcher"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Paper"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Reviewaction.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Reviewaction.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 140,
+                "y": 600
+            },
+            "caption": "Reviewed",
+            "original_type_name": "Reviewed_n0_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Researcher"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Paper"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Reviewaction.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Reviewaction.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 339,
+                "y": 268
+            },
+            "caption": "Approved",
+            "original_type_name": "Approved_n0_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Researcher"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Paper"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Reviewaction.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Reviewaction.toId"
+                }
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "type": "Reviewaction",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "score": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                },
+                "comment": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "string"
+                },
+                "Assigned": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Assigned",
+                    "collectionType": "list"
+                },
+                "Reviewed": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Reviewed",
+                    "collectionType": "list"
+                },
+                "Approved": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "Approved"
+                }
+            },
+            "fromId": "n0",
+            "toId": "n1",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "reviewActionType",
+            "constraints": [
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Assigned.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Assigned.target"
+                },
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Reviewed.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Reviewed.target"
+                },
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Approved.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Approved.target"
+                },
+                {
+                    "on": "score",
+                    "type": "property_value",
+                    "operator": ">=",
+                    "value": 0.0
+                },
+                {
+                    "on": "score",
+                    "type": "property_value",
+                    "operator": "<=",
+                    "value": 10.0
+                }
+            ]
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

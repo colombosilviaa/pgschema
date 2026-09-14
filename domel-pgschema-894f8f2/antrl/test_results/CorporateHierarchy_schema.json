@@ -1,0 +1,325 @@
+{
+    "name": "CorporateHierarchy",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 497,
+                "y": 293
+            },
+            "caption": "Employee",
+            "original_type_name": "employeeType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "empId": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "integer"
+                },
+                "email": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string",
+                    "unique": true
+                },
+                "age": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "constraints": [
+                {
+                    "on": "age",
+                    "type": "property_value",
+                    "operator": ">=",
+                    "value": 18
+                },
+                {
+                    "on": "age",
+                    "type": "property_value",
+                    "operator": "<=",
+                    "value": 65
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 960,
+                "y": 251
+            },
+            "caption": "Manager",
+            "original_type_name": "Manager",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 288,
+                "y": 213
+            },
+            "caption": "Employee AND Manager",
+            "original_type_name": "managerType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "departmentId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate",
+            "constraints": [
+                {
+                    "type": "disjoint",
+                    "node": "Employee AND Intern"
+                },
+                {
+                    "on": "departmentId",
+                    "type": "equal",
+                    "target": "Department.deptId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 325,
+                "y": 577
+            },
+            "caption": "Intern",
+            "original_type_name": "Intern",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 976,
+                "y": 108
+            },
+            "caption": "Employee AND Intern",
+            "original_type_name": "internType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "mentorId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate",
+            "constraints": [
+                {
+                    "type": "disjoint",
+                    "node": "Employee AND Manager"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n5",
+            "position": {
+                "x": 263,
+                "y": 220
+            },
+            "caption": "Department",
+            "original_type_name": "departmentType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "deptId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                },
+                "name": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "constraints": [
+                {
+                    "on": "deptId",
+                    "type": "equal",
+                    "target": "Employee AND Manager.departmentId"
+                }
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n2",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n2",
+            "toId": "n1",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n2",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n4",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n3",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n4",
+            "toId": "n3",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n4",
+            "type": "Worksin",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n0",
+            "toId": "n5",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 1,
+            "target_maximum_cardinality": 1,
+            "navigation": "None",
+            "original_type_name": "worksInType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n5",
+            "type": "Mentoredby",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n4",
+            "toId": "n2",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "mentoredByType"
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

@@ -1,0 +1,8 @@
+CREATE GRAPH TYPE ActiveAccountSystem STRICT {
+    (userType: User {userId INT, status STRING}),
+    (accountType: Account {accountId INT, balance FLOAT}),
+    (:userType)-[ownsType: Owns]->(:accountType),
+    FOR (x: userType) EXCLUSIVE MANDATORY SINGLETON x.userId,
+    FOR (x: userType) MANDATORY x.status != 'Suspended',
+    FOR (x: accountType) MANDATORY x.balance >= 0.0
+}

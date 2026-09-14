@@ -1,0 +1,6 @@
+CREATE GRAPH TYPE friendGraph_v1 STRICT {
+  (personType: Person {name STRING, OPTIONAL bday DATE, OPEN}),
+  (customerType: Customer),
+
+  (:personType|customerType)-[friendType: Knows & Likes {OPTIONAL since DATE}]-> (:personType|customerType)
+}

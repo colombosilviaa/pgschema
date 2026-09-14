@@ -1,0 +1,14 @@
+CREATE GRAPH TYPE PaymentGateway STRICT {
+    (creditCardType: Creditcard {cardNumber STRING, expiry DATE}),
+    (bankaccountType: Bankaccount {iban STRING, swift STRING}),
+    (paymentSourceType: creditCardType | bankaccountType {sourceId INT, active BOOLEAN, OPEN}),
+    (userType: User {userId INT, email STRING}),
+    (transactionType: Transaction {txId STRING, amount FLOAT}),
+    (:userType)-[registersType: Registers {verified BOOLEAN}]->(:paymentSourceType),
+    (:transactionType)-[chargedtoType: Chargedto {fee FLOAT}]->(:paymentSourceType),
+    FOR (x: paymentSourceType) EXCLUSIVE MANDATORY SINGLETON x.sourceId,
+    FOR (x: userType) EXCLUSIVE MANDATORY SINGLETON x.userId,
+    FOR (x: userType) EXCLUSIVE x.email,
+    FOR (x: transactionType) MANDATORY x.amount > 0.0,
+    FOR (x: transactionType) SINGLETON y WITHIN (x)-[y: chargedToType]->()
+}

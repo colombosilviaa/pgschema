@@ -1,0 +1,9 @@
+CREATE GRAPH TYPE CloudInfrastructure STRICT {
+    (resourceType: Resource OPEN {id STRING, region STRING}),
+    (computeType: resourceType & Compute {cores INT, ram FLOAT}),
+    (storageType: resourceType & Storage {capacity INT, OPTIONAL encrypted BOOLEAN}),
+    (:computeType)-[mountsType: Mounts {mode STRING}]->(:storageType),
+    FOR (x: resourceType) EXCLUSIVE MANDATORY SINGLETON x.id,
+    FOR (x: computeType) MANDATORY (x: !storageType),
+    FOR (x: computeType) MANDATORY x.cores >= 1
+}

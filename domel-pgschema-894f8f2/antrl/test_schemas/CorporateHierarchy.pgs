@@ -1,0 +1,15 @@
+CREATE GRAPH TYPE CorporateHierarchy STRICT {
+  (employeeType: Employee {empId INT, email STRING, age INT}),
+  (managerType: employeeType & Manager {departmentId INT}),
+  (internType: employeeType & Intern {mentorId INT}),
+  (departmentType: Department {deptId INT, name STRING}),
+  (:employeeType)-[worksInType: WorksIn]->(:departmentType),
+  (:internType)-[mentoredByType: MentoredBy]->(:managerType),
+
+  FOR (e: employeeType) EXCLUSIVE MANDATORY SINGLETON e.empId,
+  FOR (e: employeeType) EXCLUSIVE e.email,
+  FOR (e: employeeType) MANDATORY e.age >= 18 AND e.age <= 65,
+  FOR (m: managerType) MANDATORY (m: !internType),
+  FOR (e: employeeType) MANDATORY SINGLETON r WITHIN (e)-[r: worksInType]->(),
+  FOR (m: managerType) MANDATORY d.deptId WITHIN (d: departmentType) WHERE d.deptId = m.departmentId
+}

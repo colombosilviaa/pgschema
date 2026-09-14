@@ -1,0 +1,8 @@
+CREATE GRAPH TYPE friendGraph_v3 STRICT {
+    (personType: Person {name STRING, id INT}),
+    (customerType: Customer {id INT}),
+    (:personType)-[friendType: Knows & Likes & Bestie?]->(:personType),
+    FOR (x: personType) EXCLUSIVE MANDATORY SINGLETON x.id,
+    FOR (x: personType) MANDATORY y.id WITHIN (y: customerType) WHERE y.id = x.id,
+    FOR (x: personType) SINGLETON y WITHIN (x)-[y: friendType & Bestie]->()
+}

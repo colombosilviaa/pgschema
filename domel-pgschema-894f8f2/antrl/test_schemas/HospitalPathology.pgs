@@ -1,0 +1,17 @@
+CREATE GRAPH TYPE HospitalPathology STRICT {
+  (patientType: Patient {ssn STRING, name STRING}),
+  (doctorType: Doctor {licenseId STRING}),
+  (labType: Lab {labId STRING}),
+  (testType: Test {testId STRING, typology STRING}),
+  (reportType: Report {reportId STRING, outcome STRING, accuracy FLOAT}),
+
+  (:doctorType)-[prescribesType: Prescribes {date DATE}]->(:testType),
+  (:patientType)-[undergoesType: Undergoes]->(:testType),
+  (:labType)-[analyzesType: Analyzes {date DATE}]->(:testType),
+  (:testType)-[generatesType: Generates]->(:reportType),
+  
+  FOR (p: patientType) EXCLUSIVE MANDATORY SINGLETON p.ssn,
+  FOR (r: reportType) EXCLUSIVE MANDATORY SINGLETON r.reportId,
+  FOR (r: reportType) MANDATORY r.accuracy >= 90.0 AND r.accuracy <= 100.0,
+  FOR (t: testType) SINGLETON res WITHIN (t)-[res: generatesType]->()
+}

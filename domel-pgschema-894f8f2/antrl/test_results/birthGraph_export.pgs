@@ -1,0 +1,6 @@
+CREATE GRAPH TYPE birthGraph STRICT {
+    (personType: Person {name STRING, OPTIONAL bday DATE, OPEN}),
+    (cityType: City {name STRING, zipcode STRING}),
+    (:personType)-[placeofbirthType: Placeofbirth {OPTIONAL registration STRING}]->(:cityType),
+    FOR (x: personType) MANDATORY SINGLETON y WITHIN (x)-[y: placeofbirthType]->()
+}

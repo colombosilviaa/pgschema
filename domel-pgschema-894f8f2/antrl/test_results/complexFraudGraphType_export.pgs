@@ -1,0 +1,16 @@
+CREATE GRAPH TYPE complexFraudGraphType STRICT {
+    (personType: Person {name STRING, ssn STRING}),
+    (companyType: Company {taxId STRING, name STRING}),
+    (customerType: (personType | companyType) & Customer {id INT}),
+    (creditCardType: Creditcard {num STRING, expDate DATE}),
+    (transactionType: Transaction {num STRING, amount FLOAT}),
+    (accountType: Account {id INT, balance FLOAT}),
+    (:customerType)-[ownsType: Owns]->(:accountType),
+    (:customerType)-[usesType: Uses]->(:creditCardType),
+    (:transactionType)-[chargesType: Charges]->(:creditCardType),
+    (:transactionType)-[investigationType: Flagged & Audited? {reason STRING}]->(:accountType),
+    (:transactionType)-[Activity: Deposits|Withdraws]->(:accountType),
+    FOR (x: customerType) EXCLUSIVE MANDATORY SINGLETON x.id,
+    FOR (x: transactionType) MANDATORY x.amount > 0.0,
+    FOR (x: transactionType) SINGLETON y WITHIN (x)-[y: chargesType]->()
+}

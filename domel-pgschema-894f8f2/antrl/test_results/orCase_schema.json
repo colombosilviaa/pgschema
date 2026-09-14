@@ -1,0 +1,214 @@
+{
+    "name": "orCase",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 328,
+                "y": 373
+            },
+            "caption": "A",
+            "original_type_name": "A",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 130,
+                "y": 276
+            },
+            "caption": "B",
+            "original_type_name": "B",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 1118,
+                "y": 271
+            },
+            "caption": "A AND B",
+            "original_type_name": "A AND B",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate"
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 514,
+                "y": 345
+            },
+            "caption": "B XOR A AND B",
+            "original_type_name": "B XOR A AND B",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate"
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 457,
+                "y": 323
+            },
+            "caption": "A XOR B XOR A AND B",
+            "original_type_name": "AType",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate"
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n2",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n2",
+            "toId": "n1",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n2",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "fromId": "n3",
+            "toId": "n1",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n3",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "fromId": "n3",
+            "toId": "n2",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n4",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "fromId": "n4",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n5",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "fromId": "n4",
+            "toId": "n3",
+            "required": true,
+            "style": {},
+            "properties": {}
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

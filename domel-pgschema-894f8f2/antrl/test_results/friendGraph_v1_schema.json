@@ -1,0 +1,534 @@
+{
+    "name": "friendGraph_v1",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 971,
+                "y": 274
+            },
+            "caption": "Person",
+            "original_type_name": "personType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "name": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "bday": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "date"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": true
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 1160,
+                "y": 233
+            },
+            "caption": "Customer",
+            "original_type_name": "customerType",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 538,
+                "y": 278
+            },
+            "caption": "Person Knows Person",
+            "original_type_name": "Knows_n0_n0",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Person"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Person"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Friend.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Friend.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 1080,
+                "y": 424
+            },
+            "caption": "Person Likes Person",
+            "original_type_name": "Likes_n0_n0",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Person"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Person"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Friend.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Friend.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 635,
+                "y": 283
+            },
+            "caption": "Person Knows Customer",
+            "original_type_name": "Knows_n0_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Person"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Customer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Friend.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Friend.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n5",
+            "position": {
+                "x": 552,
+                "y": 298
+            },
+            "caption": "Person Likes Customer",
+            "original_type_name": "Likes_n0_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Person"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Customer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Friend.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Friend.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n6",
+            "position": {
+                "x": 588,
+                "y": 368
+            },
+            "caption": "Customer Knows Customer",
+            "original_type_name": "Knows_n1_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Customer"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Customer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Friend.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Friend.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n7",
+            "position": {
+                "x": 1108,
+                "y": 133
+            },
+            "caption": "Customer Likes Customer",
+            "original_type_name": "Likes_n1_n1",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Customer"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Customer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Friend.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Friend.toId"
+                }
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "type": "Friend",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "since": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "date"
+                },
+                "Knows": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Knows",
+                    "collectionType": "list"
+                },
+                "Likes": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Likes",
+                    "collectionType": "list"
+                }
+            },
+            "fromId": "n0",
+            "toId": "n0",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "friendType",
+            "constraints": [
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Knows.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Knows.target"
+                },
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Likes.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Likes.target"
+                }
+            ]
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "type": "Friend",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "since": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "date"
+                },
+                "Knows": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Knows",
+                    "collectionType": "list"
+                },
+                "Likes": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Likes",
+                    "collectionType": "list"
+                }
+            },
+            "fromId": "n0",
+            "toId": "n1",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "friendType",
+            "constraints": [
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Knows.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Knows.target"
+                },
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Likes.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Likes.target"
+                }
+            ]
+        },
+        {
+            "entityType": "relationship",
+            "id": "n2",
+            "type": "Friend",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "since": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "date"
+                },
+                "Knows": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Knows",
+                    "collectionType": "list"
+                },
+                "Likes": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Likes",
+                    "collectionType": "list"
+                }
+            },
+            "fromId": "n1",
+            "toId": "n1",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "friendType",
+            "constraints": [
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Knows.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Knows.target"
+                },
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Likes.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Likes.target"
+                }
+            ]
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

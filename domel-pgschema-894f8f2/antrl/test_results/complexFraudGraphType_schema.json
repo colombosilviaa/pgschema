@@ -1,0 +1,601 @@
+{
+    "name": "complexFraudGraphType",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 1166,
+                "y": 141
+            },
+            "caption": "Person",
+            "original_type_name": "personType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "name": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "ssn": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 603,
+                "y": 151
+            },
+            "caption": "Company",
+            "original_type_name": "companyType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "taxId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "name": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 449,
+                "y": 461
+            },
+            "caption": "Customer",
+            "original_type_name": "Customer",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 265,
+                "y": 469
+            },
+            "caption": "Person XOR Company",
+            "original_type_name": "Person XOR Company",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate"
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 1127,
+                "y": 248
+            },
+            "caption": "Person XOR Company AND Customer",
+            "original_type_name": "customerType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "id": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "integer"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "intermediate"
+        },
+        {
+            "entityType": "node",
+            "id": "n5",
+            "position": {
+                "x": 173,
+                "y": 183
+            },
+            "caption": "Creditcard",
+            "original_type_name": "creditCardType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "num": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "expDate": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "date"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n6",
+            "position": {
+                "x": 501,
+                "y": 291
+            },
+            "caption": "Transaction",
+            "original_type_name": "transactionType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "num": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "amount": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "constraints": [
+                {
+                    "on": "amount",
+                    "type": "property_value",
+                    "operator": ">",
+                    "value": 0.0
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n7",
+            "position": {
+                "x": 910,
+                "y": 268
+            },
+            "caption": "Account",
+            "original_type_name": "accountType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "id": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "integer"
+                },
+                "balance": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n8",
+            "position": {
+                "x": 737,
+                "y": 559
+            },
+            "caption": "Activity",
+            "original_type_name": "Activity",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Transaction"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Account"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        },
+        {
+            "entityType": "node",
+            "id": "n9",
+            "position": {
+                "x": 1159,
+                "y": 559
+            },
+            "caption": "Deposits",
+            "original_type_name": "Deposits",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        },
+        {
+            "entityType": "node",
+            "id": "n10",
+            "position": {
+                "x": 1193,
+                "y": 208
+            },
+            "caption": "Withdraws",
+            "original_type_name": "Withdraws",
+            "abstract": false,
+            "description": "",
+            "properties": {},
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified"
+        },
+        {
+            "entityType": "node",
+            "id": "n11",
+            "position": {
+                "x": 434,
+                "y": 363
+            },
+            "caption": "Flagged",
+            "original_type_name": "Flagged_n6_n7",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Transaction"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Account"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Investigation.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Investigation.toId"
+                }
+            ]
+        },
+        {
+            "entityType": "node",
+            "id": "n12",
+            "position": {
+                "x": 376,
+                "y": 505
+            },
+            "caption": "Audited",
+            "original_type_name": "Audited_n6_n7",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "source": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Transaction"
+                },
+                "target": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Account"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "note": "reified",
+            "constraints": [
+                {
+                    "on": "source",
+                    "type": "equal",
+                    "target": "Investigation.fromId"
+                },
+                {
+                    "on": "target",
+                    "type": "equal",
+                    "target": "Investigation.toId"
+                }
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "fromId": "n3",
+            "toId": "n0",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "fromId": "n3",
+            "toId": "n1",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n2",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n4",
+            "toId": "n3",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n3",
+            "relationshipType": "INHERITANCE",
+            "fromId": "n4",
+            "toId": "n2",
+            "required": true,
+            "style": {},
+            "properties": {}
+        },
+        {
+            "entityType": "relationship",
+            "id": "n4",
+            "type": "Owns",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n4",
+            "toId": "n7",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "ownsType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n5",
+            "type": "Uses",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n4",
+            "toId": "n5",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "usesType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n6",
+            "type": "Charges",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n6",
+            "toId": "n5",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": 1,
+            "navigation": "None",
+            "original_type_name": "chargesType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n8",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "style": {},
+            "properties": {},
+            "fromId": "n9",
+            "toId": "n8",
+            "description": "",
+            "required": true
+        },
+        {
+            "entityType": "relationship",
+            "id": "n9",
+            "relationshipType": "EXCLUSIVE INHERITANCE",
+            "style": {},
+            "properties": {},
+            "fromId": "n10",
+            "toId": "n8",
+            "description": "",
+            "required": true
+        },
+        {
+            "entityType": "relationship",
+            "id": "n10",
+            "type": "Investigation",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "reason": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "Flagged": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "Flagged",
+                    "collectionType": "list"
+                },
+                "Audited": {
+                    "description": "",
+                    "requiredType": "optional",
+                    "range": "Audited"
+                }
+            },
+            "fromId": "n6",
+            "toId": "n7",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "investigationType",
+            "constraints": [
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Flagged.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Flagged.target"
+                },
+                {
+                    "on": "fromId",
+                    "type": "equal",
+                    "target": "Audited.source"
+                },
+                {
+                    "on": "toId",
+                    "type": "equal",
+                    "target": "Audited.target"
+                }
+            ]
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

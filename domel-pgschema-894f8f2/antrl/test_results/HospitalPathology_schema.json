@@ -1,0 +1,299 @@
+{
+    "name": "HospitalPathology",
+    "graphTypeMode": "Strict",
+    "nodes": [
+        {
+            "entityType": "node",
+            "id": "n0",
+            "position": {
+                "x": 414,
+                "y": 355
+            },
+            "caption": "Patient",
+            "original_type_name": "patientType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "ssn": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "string"
+                },
+                "name": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n1",
+            "position": {
+                "x": 432,
+                "y": 234
+            },
+            "caption": "Doctor",
+            "original_type_name": "doctorType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "licenseId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n2",
+            "position": {
+                "x": 723,
+                "y": 564
+            },
+            "caption": "Lab",
+            "original_type_name": "labType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "labId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n3",
+            "position": {
+                "x": 722,
+                "y": 275
+            },
+            "caption": "Test",
+            "original_type_name": "testType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "testId": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "typology": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            }
+        },
+        {
+            "entityType": "node",
+            "id": "n4",
+            "position": {
+                "x": 516,
+                "y": 199
+            },
+            "caption": "Report",
+            "original_type_name": "reportType",
+            "abstract": false,
+            "description": "",
+            "properties": {
+                "reportId": {
+                    "description": "",
+                    "requiredType": "identifier",
+                    "range": "string"
+                },
+                "outcome": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "string"
+                },
+                "accuracy": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "float"
+                }
+            },
+            "style": {},
+            "open": {
+                "class": false,
+                "properties": false
+            },
+            "constraints": [
+                {
+                    "on": "accuracy",
+                    "type": "property_value",
+                    "operator": ">=",
+                    "value": 90.0
+                },
+                {
+                    "on": "accuracy",
+                    "type": "property_value",
+                    "operator": "<=",
+                    "value": 100.0
+                }
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "entityType": "relationship",
+            "id": "n0",
+            "type": "Prescribes",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "date": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "date"
+                }
+            },
+            "fromId": "n1",
+            "toId": "n3",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "prescribesType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n1",
+            "type": "Undergoes",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n0",
+            "toId": "n3",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "undergoesType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n2",
+            "type": "Analyzes",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {
+                "date": {
+                    "description": "",
+                    "requiredType": "required",
+                    "range": "date"
+                }
+            },
+            "fromId": "n2",
+            "toId": "n3",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": "N",
+            "navigation": "None",
+            "original_type_name": "analyzesType"
+        },
+        {
+            "entityType": "relationship",
+            "id": "n3",
+            "type": "Generates",
+            "relationshipType": "ASSOCIATION",
+            "style": {},
+            "properties": {},
+            "fromId": "n3",
+            "toId": "n4",
+            "description": "",
+            "required": false,
+            "source_minimum_cardinality": 0,
+            "source_maximum_cardinality": "N",
+            "target_minimum_cardinality": 0,
+            "target_maximum_cardinality": 1,
+            "navigation": "None",
+            "original_type_name": "generatesType"
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "class-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "class-padding": 5,
+        "class-margin": 2,
+        "outside-position": "auto",
+        "class-icon-image": "",
+        "class-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "class-name-position": "inside",
+        "class-name-max-width": 200,
+        "class-name-color": "#000000",
+        "class-name-font-size": 50,
+        "class-name-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "attribute-position": "outside",
+        "ontology-position": "outside",
+        "attribute-alignment": "colon",
+        "attribute-color": "#000000",
+        "attribute-font-size": 16,
+        "attribute-font-weight": "normal"
+    }
+}

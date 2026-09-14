@@ -1,0 +1,11 @@
+CREATE GRAPH TYPE RealEstateLeasing STRICT {
+    (personType: Person {ssn STRING, name STRING}),
+    (businessType: Business {vat STRING, companyName STRING}),
+    (propertyType: Property {propId INT, address STRING, value FLOAT}),
+    (:personType)-[leasesType: Leases {monthlyRent FLOAT, startDate DATE}]->(:propertyType),
+    (:businessType)-[leasesType: Leases {monthlyRent FLOAT, startDate DATE}]->(:propertyType),
+    FOR (x: personType) EXCLUSIVE MANDATORY SINGLETON x.ssn,
+    FOR (x: businessType) EXCLUSIVE MANDATORY SINGLETON x.vat,
+    FOR (x: propertyType) EXCLUSIVE MANDATORY SINGLETON x.propId,
+    FOR (x: propertyType) MANDATORY x.value > 0.0
+}
