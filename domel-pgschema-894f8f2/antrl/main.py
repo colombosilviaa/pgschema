@@ -106,7 +106,7 @@ def extract_constraints(input_pgs_code):
     """
 
     #cerca in input_pgs_code, la prima occorrenza che corrisponde al pattern
-    found_constraints = re.search(r'(,\s*)?(FOR\s+\(.*)', input_pgs_code, re.IGNORECASE | re.DOTALL)
+    found_constraints = re.search(r'(,\s*)?(\bFOR\s+\(.*)', input_pgs_code, re.IGNORECASE | re.DOTALL)
 
     if found_constraints:
         constraints_block = found_constraints.group(2)
