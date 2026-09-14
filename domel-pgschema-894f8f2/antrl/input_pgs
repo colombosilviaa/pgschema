@@ -1,0 +1,3 @@
+CREATE GRAPH TYPE B2BNetworkGraph STRICT {
+    (atype: a \/ b)
+}
