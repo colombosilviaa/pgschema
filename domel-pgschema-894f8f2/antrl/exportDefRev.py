@@ -69,26 +69,26 @@ def convert_internal_representation_to_pgschema_dict(graph: Dict[str, Any]) -> D
         else:
             id_to_typename[node_id] = orig_var
 
-    node_parents = {} # id -> op, parents
+    node_parents = {} # id -> targets (ognuno marcato AND/XOR singolarmente)
     all_from_ids = set()
     all_to_ids = set()
 
     for rel in relationships:
         rel_type = rel.get("relationshipType")
         if rel_type in ("INHERITANCE", "EXCLUSIVE INHERITANCE"):
-            from_id = rel.get("fromId") 
-            to_id = rel.get("toId")     
-            
+            from_id = rel.get("fromId")
+            to_id = rel.get("toId")
+
             if from_id in id_to_node and to_id in id_to_node:
                 all_from_ids.add(from_id)
                 all_to_ids.add(to_id)
 
                 if from_id not in node_parents:
-                    op = "|" if rel_type == "EXCLUSIVE INHERITANCE" else "&"
-                    node_parents[from_id] = {"operator": op, "targets": []}
+                    node_parents[from_id] = {"targets": []}
 
                 is_required = rel.get("required", True)
-                node_parents[from_id]["targets"].append({"id": to_id, "required": is_required})
+                is_exclusive = rel_type == "EXCLUSIVE INHERITANCE"
+                node_parents[from_id]["targets"].append({"id": to_id, "required": is_required, "exclusive": is_exclusive})
 
     seen_type_names = set()
 
@@ -297,14 +297,16 @@ def _resolve_inheritance(node_id, node_parents, id_to_typename, id_to_node):
     """
     if node_id not in node_parents:
         return id_to_node.get(node_id, {}).get("caption", "Unknown")
-        
-    op = node_parents[node_id]["operator"]
+
     targets = node_parents[node_id]["targets"]
-    
-    # Se l'operatore è "|", ma non ci sono almeno due target validi, abortiamo
-    if op == "|" and len(targets) < 2:
+    and_targets = [t for t in targets if not t["exclusive"]]
+    xor_targets = [t for t in targets if t["exclusive"]]
+
+    # Un gruppo XOR ha senso solo con almeno due alternative; un singolo target
+    # esclusivo senza alternative (e senza altri genitori AND) non esprime nulla.
+    if not and_targets and len(xor_targets) < 2:
         return id_to_node.get(node_id, {}).get("caption", "Unknown")
-        
+
     # Innesca il motore ricorsivo
     return _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node)
 
@@ -313,42 +315,57 @@ def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, pa
     """
     Helper ricorsivo: naviga l'albero delle dipendenze logiche, risolve i nomi
     e applica le parentesi per rispettare la precedenza degli operatori (es. AND dentro OR).
+
+    I target di un nodo possono essere in parte AND (INHERITANCE) e in parte XOR
+    (EXCLUSIVE INHERITANCE): in quel caso il gruppo XOR viene racchiuso tra parentesi
+    e trattato come un singolo termine AND-ato con gli altri genitori.
     """
     # CASO BASE: Siamo arrivati a una foglia (nodo base)
     if node_id not in node_parents:
         return id_to_typename.get(node_id, id_to_node.get(node_id, {}).get("caption", "Unknown"))
 
-    op = node_parents[node_id]["operator"]
     targets = node_parents[node_id]["targets"]
     root_type = id_to_typename.get(node_id, "Unknown")
-    
-    resolved_targets = []
-    
-    for target in targets:
+
+    def resolve(target, sub_op):
         t_id = target["id"]
         t_type = id_to_typename.get(t_id, "Unknown")
-        
+
         # CASO RICORSIVO: Il target è a sua volta un nodo logico intermedio
         if t_id in node_parents and (" AND " in t_type or " XOR " in t_type):
-            sub_expr = _build_expression_tree(t_id, node_parents, id_to_typename, id_to_node, parent_op=op)
+            sub_expr = _build_expression_tree(t_id, node_parents, id_to_typename, id_to_node, parent_op=sub_op)
         else:
             # Prevenzione dei conflitti di nome: se figlio e radice si chiamano uguale, usiamo la caption pura
             if t_type == root_type:
                 sub_expr = id_to_node.get(t_id, {}).get("caption", "Unknown")
             else:
                 sub_expr = t_type
-                
+
         # Gestione dell'opzionalità
         if not target["required"]:
             sub_expr += " ?"
-            
-        resolved_targets.append(sub_expr)
-        
-    expr = f" {op} ".join(resolved_targets)
-    
+
+        return sub_expr
+
+    and_targets = [t for t in targets if not t["exclusive"]]
+    xor_targets = [t for t in targets if t["exclusive"]]
+
+    if and_targets and len(xor_targets) >= 2:
+        # CASO MISTO: genitori obbligatori (AND) + un gruppo di alternative esclusive (XOR)
+        and_parts = [resolve(t, "&") for t in and_targets]
+        xor_parts = [resolve(t, "|") for t in xor_targets]
+        and_parts.append(f"({' | '.join(xor_parts)})")
+        expr = " & ".join(and_parts)
+        op = "&"
+    else:
+        # CASO PURO: solo AND, oppure solo XOR (un XOR con un solo target degenera in AND)
+        op = "|" if (xor_targets and not and_targets and len(xor_targets) >= 2) else "&"
+        merged_targets = and_targets + xor_targets
+        expr = f" {op} ".join(resolve(t, op) for t in merged_targets)
+
     if parent_op and parent_op != op:
         return f"({expr})"
-        
+
     return expr
 
 def _extract_constraints(nodes: List[Dict[str, Any]]) -> List[str]:
