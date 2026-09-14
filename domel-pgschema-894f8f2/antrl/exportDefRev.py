@@ -235,8 +235,8 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
             if not source_range or not target_range:
                 continue
             
-            source_var = next((n.get("original_type_name") for n in nodes if n.get("caption") == source_range), None)
-            target_var = next((n.get("original_type_name") for n in nodes if n.get("caption") == target_range), None)
+            source_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == source_range.lower()), None)
+            target_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == target_range.lower()), None)
             if not source_var or not target_var:
                 print(f"WARN: Missing source or target. Association skipped")
                 continue
