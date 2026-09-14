@@ -2,9 +2,14 @@ from typing import Dict, Any, List
 
 PG_TYPES_MAP = {
     "string": "STRING", "integer": "INT", "int": "INT",
-    "boolean": "BOOLEAN", "bool": "BOOLEAN", 
+    "boolean": "BOOLEAN", "bool": "BOOLEAN",
     "float": "FLOAT", "double": "DOUBLE", "date": "DATE"
 }
+
+def _find_original_type_by_caption(nodes: List[Dict[str, Any]], caption: Any, fallback: Any = None):
+    """Cerca un nodo per caption (case-insensitive) e ne restituisce l'original_type_name."""
+    clean_caption = str(caption).lower()
+    return next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == clean_caption), fallback)
 
 def convert_internal_representation_to_pgschema_dict(graph: Dict[str, Any]) -> Dict[str, Any]:
     """Trasforma il JSON interno in un dizionario strutturato per PG-Schema."""
@@ -235,8 +240,8 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
             if not source_range or not target_range:
                 continue
             
-            source_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == source_range.lower()), None)
-            target_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == target_range.lower()), None)
+            source_var = _find_original_type_by_caption(nodes, source_range)
+            target_var = _find_original_type_by_caption(nodes, target_range)
             if not source_var or not target_var:
                 print(f"WARN: Missing source or target. Association skipped")
                 continue
@@ -405,7 +410,7 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
 
             elif c_type == "disjoint":
                 target_caption = constraint.get("node")
-                target_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == str(target_caption).lower()), f"{str(target_caption).lower()}Type")
+                target_var = _find_original_type_by_caption(nodes, target_caption, fallback=f"{str(target_caption).lower()}Type")
                 pair = tuple(sorted([node_var, target_var]))
                 if pair not in seen_disjoints:
                     seen_disjoints.add(pair)
@@ -423,7 +428,7 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
                     target_caption, target_prop = target_val.split(".", 1)
                     
                     # Recuperiamo la variabile del nodo target
-                    target_var = next((n.get("original_type_name") for n in nodes if n.get("caption", "").lower() == target_caption.lower()), f"{target_caption.lower()}Type")
+                    target_var = _find_original_type_by_caption(nodes, target_caption, fallback=f"{target_caption.lower()}Type")
                     
                     alias_target = "y"
                     pair = tuple(sorted([f"{node_var}.{prop}", f"{target_var}.{target_prop}"]))
