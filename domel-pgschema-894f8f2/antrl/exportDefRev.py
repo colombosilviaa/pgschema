@@ -6,14 +6,6 @@ PG_TYPES_MAP = {
     "float": "FLOAT", "double": "DOUBLE", "date": "DATE"
 }
 
-def _sanitize_identifier(name: Any) -> str:
-    """PG-Schema identifiers (type names and labels) cannot contain spaces."""
-    return str(name).replace(" ", "_")
-
-def _default_typename(name: Any) -> str:
-    """Derive a type-name identifier from a free-text caption/type when no original_type_name is available."""
-    return f"{_sanitize_identifier(name).lower()}Type"
-
 def _find_original_type_by_caption(nodes: List[Dict[str, Any]], caption: Any, fallback: Any = None):
     """Cerca un nodo per caption (case-insensitive) e ne restituisce l'original_type_name."""
     clean_caption = str(caption).lower()
@@ -77,12 +69,8 @@ def convert_internal_representation_to_pgschema_dict(graph: Dict[str, Any]) -> D
         orig_var = n.get("original_type_name")
 
         if not orig_var:
-            id_to_typename[node_id] = _default_typename(caption)
+            id_to_typename[node_id] = f"{caption.lower()}Type"
         elif orig_var == caption:
-            # orig_var here is either parser-derived (already a valid identifier) or one of
-            # the translator's internal "A AND B"/"A XOR B" composite markers, which downstream
-            # code matches on literally (" AND " / " XOR ") to detect synthetic ghost nodes —
-            # must not be sanitized away.
             id_to_typename[node_id] = caption
         else:
             id_to_typename[node_id] = orig_var
@@ -211,7 +199,7 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
         group_key = (source_var, target_var, rel_type_name, props_signature)
         if group_key not in grouped_assocs:
             grouped_assocs[group_key] = {
-                "rel_typename": _default_typename(rel_type_name),
+                "rel_typename": f"{rel_type_name.lower()}Type",
                 "properties": {}, 
                 "source": source_var,
                 "target": target_var
@@ -239,9 +227,9 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
                     opt_flag = "OPTIONAL" if is_optional else ""
                     primitive_props.append(f"{opt_flag} {prop_name} {pg_type}".strip())
         
-        rel_label = " & ".join(reified_types) if reified_types else _sanitize_identifier(rel_type_name)
+        rel_label = " & ".join(reified_types) if reified_types else rel_type_name 
         props_str = f" {{{', '.join(primitive_props)}}}" if primitive_props else ""
-
+        
         # 4. Stampiamo la singola relazione lineare senza |
         formatted_rels.append(f"(:{source_var})-[{data['rel_typename']}: {rel_label}{props_str}]->(:{target_var})")
         
@@ -263,7 +251,7 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
             if not source_var or not target_var:
                 print(f"WARN: Missing source or target. Association skipped")
                 continue
-            rel_typename = node.get("original_type_name", _default_typename(node.get('caption', 'unknown')))
+            rel_typename = node.get("original_type_name", f"{node.get('caption', 'unknown').lower()}Type")
 
             inh_parents = [r for r in relationships if r.get("relationshipType") == "INHERITANCE" and r.get("fromId") == node_id]
             inh_children = [r for r in relationships if r.get("relationshipType") == "INHERITANCE" and r.get("toId") == node_id]
@@ -291,7 +279,7 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
 
             # CASO A: XOR association (es: Activity -> Deposits|Withdraws)
             if len(excl_children) >= 2:
-                children_labels = [_sanitize_identifier(node_map[r["fromId"]].get("caption", "")) for r in excl_children if r["fromId"] in node_map]
+                children_labels = [node_map[r["fromId"]].get("caption", "") for r in excl_children if r["fromId"] in node_map]
                 if len(children_labels) >= 2:
                     label = "|".join(sorted(children_labels))
                     formatted_rels.append(f"(:{source_var})-[{rel_typename}: {label}{props_str}]->(:{target_var})")
@@ -301,14 +289,14 @@ def _format_associations(relationships: list, nodes: list, id_to_typename: dict)
             if inh_parents:
                 parent_node = node_map.get(inh_parents[0]["toId"])
                 if parent_node:
-                    rel_label = parent_node.get("original_type_name", _default_typename(parent_node.get('caption', 'unknown')))
+                    rel_label = parent_node.get("original_type_name", f"{parent_node.get('caption', 'unknown').lower()}Type")
                     formatted_rels.append(f"(:{source_var})-[{rel_typename}: {rel_label}{props_str}]->(:{target_var})")
                 continue
                 
             # CASO C: Padre Base Reificato (es: friendType: Friend)
             if inh_children and not inh_parents:
                 # 3. Assembliamo le label logiche se ci sono, altrimenti usiamo la caption!
-                rel_label = " & ".join(reified_labels) if reified_labels else _sanitize_identifier(node.get("caption", "Unknown"))
+                rel_label = " & ".join(reified_labels) if reified_labels else node.get("caption", "Unknown")
                 formatted_rels.append(f"(:{source_var})-[{rel_typename}: {rel_label}{props_str}]->(:{target_var})")
                 continue
     return formatted_rels
@@ -319,7 +307,7 @@ def _resolve_inheritance(node_id, node_parents, id_to_typename, id_to_node):
     Valida il nodo e innesca la costruzione ricorsiva dell'espressione.
     """
     if node_id not in node_parents:
-        return _sanitize_identifier(id_to_node.get(node_id, {}).get("caption", "Unknown"))
+        return id_to_node.get(node_id, {}).get("caption", "Unknown")
 
     targets = node_parents[node_id]["targets"]
     and_targets = [t for t in targets if not t["exclusive"]]
@@ -328,7 +316,7 @@ def _resolve_inheritance(node_id, node_parents, id_to_typename, id_to_node):
     # Un gruppo XOR ha senso solo con almeno due alternative; un singolo target
     # esclusivo senza alternative (e senza altri genitori AND) non esprime nulla.
     if not and_targets and len(xor_targets) < 2:
-        return _sanitize_identifier(id_to_node.get(node_id, {}).get("caption", "Unknown"))
+        return id_to_node.get(node_id, {}).get("caption", "Unknown")
 
     # Innesca il motore ricorsivo, riusando la divisione AND/XOR già calcolata sopra
     return _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node,
@@ -347,7 +335,7 @@ def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, pa
     """
     # CASO BASE: Siamo arrivati a una foglia (nodo base)
     if node_id not in node_parents:
-        return id_to_typename.get(node_id, _sanitize_identifier(id_to_node.get(node_id, {}).get("caption", "Unknown")))
+        return id_to_typename.get(node_id, id_to_node.get(node_id, {}).get("caption", "Unknown"))
 
     targets = node_parents[node_id]["targets"]
     root_type = id_to_typename.get(node_id, "Unknown")
@@ -362,7 +350,7 @@ def _build_expression_tree(node_id, node_parents, id_to_typename, id_to_node, pa
         else:
             # Prevenzione dei conflitti di nome: se figlio e radice si chiamano uguale, usiamo la caption pura
             if t_type == root_type:
-                sub_expr = _sanitize_identifier(id_to_node.get(t_id, {}).get("caption", "Unknown"))
+                sub_expr = id_to_node.get(t_id, {}).get("caption", "Unknown")
             else:
                 sub_expr = t_type
 
@@ -405,7 +393,7 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
 
     # 1. VINCOLI SUI NODI (Identifier, Unique, Property Value, Disjoint)
     for node in nodes:
-        node_var = node.get("original_type_name", _default_typename(node.get('caption', 'unknown')))
+        node_var = node.get("original_type_name", f"{node.get('caption', 'unknown').lower()}Type")
         alias = "x"
 
         # A. Properties (Identifier e Unique)
@@ -428,7 +416,7 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
 
             elif c_type == "disjoint":
                 target_caption = constraint.get("node")
-                target_var = _find_original_type_by_caption(nodes, target_caption, fallback=_default_typename(target_caption))
+                target_var = _find_original_type_by_caption(nodes, target_caption, fallback=f"{str(target_caption).lower()}Type")
                 pair = tuple(sorted([node_var, target_var]))
                 if pair not in seen_disjoints:
                     seen_disjoints.add(pair)
@@ -446,7 +434,7 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
                     target_caption, target_prop = target_val.split(".", 1)
                     
                     # Recuperiamo la variabile del nodo target
-                    target_var = _find_original_type_by_caption(nodes, target_caption, fallback=_default_typename(target_caption))
+                    target_var = _find_original_type_by_caption(nodes, target_caption, fallback=f"{target_caption.lower()}Type")
                     
                     alias_target = "y"
                     pair = tuple(sorted([f"{node_var}.{prop}", f"{target_var}.{target_prop}"]))
@@ -457,7 +445,7 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
     # 2. VINCOLI DI PROPRIETÀ SULLE RELAZIONI (es. OwnsShares percentage > 0)
     for rel in relationships:
         if "constraints" in rel:
-            rel_var = rel.get("original_type_name", _default_typename(rel.get('type', 'unknown')))
+            rel_var = rel.get("original_type_name", f"{rel.get('type', 'unknown').lower()}Type")
             alias = "x"
             for constraint in rel.get("constraints", []):
                 if constraint.get("type") == "property_value":
@@ -482,8 +470,8 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
             if quals:
                 src_node = node_map.get(rel.get("fromId"))
                 if src_node:
-                    src_var = src_node.get("original_type_name", _default_typename(src_node.get('caption', 'unknown')))
-                    rel_var = rel.get("original_type_name", _default_typename(rel.get('type', 'rel')))
+                    src_var = src_node.get("original_type_name", f"{src_node.get('caption', 'unknown').lower()}Type")
+                    rel_var = rel.get("original_type_name", f"{rel.get('type', 'rel').lower()}Type")
                     qual_str = " ".join(quals)
                     
                     # Stampiamo sempre e solo ->() per evitare forzature errate
@@ -500,9 +488,9 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
                         if node_caption in rel.get("properties", {}):
                             src_node = node_map.get(rel.get("fromId"))
                             if src_node:
-                                src_var = src_node.get("original_type_name", _default_typename(src_node.get('caption', 'unknown')))
-                                rel_var = rel.get("original_type_name", _default_typename(rel.get('type', 'rel')))
-                                generated_constraints.append(f"FOR (x: {src_var}) SINGLETON y WITHIN (x)-[y: {rel_var} & {_sanitize_identifier(node_caption)}]->()")
+                                src_var = src_node.get("original_type_name", f"{src_node.get('caption', 'unknown').lower()}Type")
+                                rel_var = rel.get("original_type_name", f"{rel.get('type', 'rel').lower()}Type")
+                                generated_constraints.append(f"FOR (x: {src_var}) SINGLETON y WITHIN (x)-[y: {rel_var} & {node_caption}]->()")
 
     return generated_constraints
 
