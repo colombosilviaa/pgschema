@@ -391,12 +391,26 @@ def apply_semantic_constraints(json_schema, parsed_constraints):
                 
                 if not target_prop:
                     # CASO A: Relazione Semplice
+                    # La direzione del vincolo dipende da dove compare ctx_var nella WITHIN:
+                    # "(x)-[y: rel]->()" -> ctx_var e' la sorgente -> vincolo sul grado uscente (target_*)
+                    # "()-[x: rel]->(y)" -> ctx_var e' la destinazione -> vincolo sul grado entrante (source_*)
+                    endpoints_match = re.search(r'\(([^)]*)\)\s*-\s*\[[^\]]*\]\s*->\s*\(([^)]*)\)', within)
+                    is_reverse = bool(
+                        endpoints_match and endpoints_match.group(2).strip() == ctx_var
+                    )
+
                     for rel in json_schema.get("relationships", []):
                         if rel.get("type", "").lower() == base_rel.lower():
-                            if "SINGLETON" in quals:
-                                rel["target_maximum_cardinality"] = 1
-                            if "MANDATORY" in quals:
-                                rel["target_minimum_cardinality"] = 1
+                            if is_reverse:
+                                if "SINGLETON" in quals:
+                                    rel["source_maximum_cardinality"] = 1
+                                if "MANDATORY" in quals:
+                                    rel["source_minimum_cardinality"] = 1
+                            else:
+                                if "SINGLETON" in quals:
+                                    rel["target_maximum_cardinality"] = 1
+                                if "MANDATORY" in quals:
+                                    rel["target_minimum_cardinality"] = 1
                 else:
                     # CASO B: Relazione Reificata
                     new_constraints = []

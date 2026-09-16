@@ -473,9 +473,29 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
                     src_var = src_node.get("original_type_name", f"{src_node.get('caption', 'unknown').lower()}Type")
                     rel_var = rel.get("original_type_name", f"{rel.get('type', 'rel').lower()}Type")
                     qual_str = " ".join(quals)
-                    
+
                     # Stampiamo sempre e solo ->() per evitare forzature errate
                     generated_constraints.append(f"FOR (x: {src_var}) {qual_str} y WITHIN (x)-[y: {rel_var}]->()")
+
+            # Direzione inversa: cardinalità sul lato source (es. "1-n" -> source_maximum_cardinality=1)
+            # vincola quante sorgenti possono puntare a un singolo target (grado entrante).
+            src_min_c = rel.get("source_minimum_cardinality", 0)
+            src_max_c = rel.get("source_maximum_cardinality", "N")
+
+            rev_quals = []
+            if src_min_c == 1:
+                rev_quals.append("MANDATORY")
+            if src_max_c == 1:
+                rev_quals.append("SINGLETON")
+
+            if rev_quals:
+                tgt_node = node_map.get(rel.get("toId"))
+                if tgt_node:
+                    tgt_var = tgt_node.get("original_type_name", f"{tgt_node.get('caption', 'unknown').lower()}Type")
+                    rel_var = rel.get("original_type_name", f"{rel.get('type', 'rel').lower()}Type")
+                    rev_qual_str = " ".join(rev_quals)
+
+                    generated_constraints.append(f"FOR (y: {tgt_var}) {rev_qual_str} x WITHIN ()-[x: {rel_var}]->(y)")
 
     # 4. CARDINALITÀ SU NODI REIFICATI (es. Bestie)
     for node in nodes:
