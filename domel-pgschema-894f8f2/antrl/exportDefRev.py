@@ -502,28 +502,15 @@ def _extract_constraintsfull(nodes: List[Dict[str, Any]], relationships: List[Di
         if node.get("note") == "reified":
             node_caption = node.get("caption", "")
             for c in node.get("constraints", []):
-                c_type = c.get("type")
-                c_attrs = c.get("attributes", [])
-                if c.get("limit") != 1 or c_type not in ("max_cardinality", "min_cardinality"):
-                    continue
-
-                # Risale alla relazione padre contenente questa reificazione
-                for rel in relationships:
-                    if node_caption not in rel.get("properties", {}):
-                        continue
-                    rel_var = rel.get("original_type_name", f"{rel.get('type', 'rel').lower()}Type")
-
-                    if "source" in c_attrs:
-                        src_node = node_map.get(rel.get("fromId"))
-                        if src_node:
-                            src_var = src_node.get("original_type_name", f"{src_node.get('caption', 'unknown').lower()}Type")
-                            qual = "SINGLETON" if c_type == "max_cardinality" else "MANDATORY"
-                            generated_constraints.append(f"FOR (x: {src_var}) {qual} y WITHIN (x)-[y: {rel_var} & {node_caption}]->()")
-                    elif "target" in c_attrs and c_type == "max_cardinality":
-                        tgt_node = node_map.get(rel.get("toId"))
-                        if tgt_node:
-                            tgt_var = tgt_node.get("original_type_name", f"{tgt_node.get('caption', 'unknown').lower()}Type")
-                            generated_constraints.append(f"FOR (y: {tgt_var}) EXCLUSIVE x WITHIN ()-[x: {rel_var} & {node_caption}]->(y)")
+                if c.get("type") == "max_cardinality" and c.get("limit") == 1 and "source" in c.get("attributes", []):
+                    # Risale alla relazione padre contenente questa reificazione
+                    for rel in relationships:
+                        if node_caption in rel.get("properties", {}):
+                            src_node = node_map.get(rel.get("fromId"))
+                            if src_node:
+                                src_var = src_node.get("original_type_name", f"{src_node.get('caption', 'unknown').lower()}Type")
+                                rel_var = rel.get("original_type_name", f"{rel.get('type', 'rel').lower()}Type")
+                                generated_constraints.append(f"FOR (x: {src_var}) SINGLETON y WITHIN (x)-[y: {rel_var} & {node_caption}]->()")
 
     return generated_constraints
 
